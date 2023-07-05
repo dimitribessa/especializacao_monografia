@@ -66,9 +66,9 @@
  files_proj85 <- files_proj85[(1:length(files_proj85))%%2 == 1]
  
  #nomeando a lista...
- nomes <- substr(files_proj,30,39)  #formato %aaaammdd (sem as horas)
- nomes1975 <- substr(files_hist,30,39)
-# datas <- unique(as.Date(nomes, '%Y%m%d%H'))
+ nomes <- substr(files_proj85,30,37)  #formato %aaaammdd (sem as horas)
+ nomes1975 <- substr(files_hist,30,37)
+ datas <- unique(as.Date(nomes, '%Y%m%d%H'))
  datas <- unique(nomes)
  datas1975 <- unique(nomes1975)
 
@@ -101,7 +101,7 @@
  load(paste0('G:/.shortcut-targets-by-id/1NzgdfgQW4Evonx1hUol7ETBjDT7Vd1f1/NIETTA/Dimitri/projecao_2023/prec45'
  ,i,'.RData'))
  if(i == 1){rcp45 <- rcp45[-1]}
- if(i == 18){rcp45 <- rpc45[1:4281]}
+ if(i == 18){rcp45 <- rcp45[1:4281]}
  matriz <- lapply(rcp45, function(x){
                            r <-  raster(x, xmn=-57, xmx=-46.05, ymn=-32, ymx=-23.45, 
                                  crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
@@ -118,32 +118,41 @@
  
  }
 
-
- sequencia <- 1:5000
- seq_data  <- 1:625
- all   <- NULL
- 
- while(i != 19){
- 
- load(paste0('rcp85_',i,'.RData'))
- names(rcp85) <- nomes[sequencia]
- 
- medias_matrix <- lapply(1:625, function(x){dia <- rcp85[1:8 + (x-1)*8]
-                             lapply(1:8, function(x){dia[[x]][[3]]}) %>% #3 == prec
+  prec45 <- lapply(1:11160, function(x){dia <- sequencia45[1:8 + (x-1)*8]
+                             lapply(1:8, function(x){dia[[x]]}) %>% #3 == prec
             Reduce('+',.)*1000}) 
- names(medias_matrix) <- datas[seq_data]
  
- all[[i]] <- medias_matrix
+  names(prec45) <- datas[-length(datas)]
  
- rm(rcp85, medias_matrix)
+
+#----------------------------------------------------------------------------#
+ #-------------precipitação cenário 85----------------------------------#
+ i <- 1
+ sequencia85 <- NULL
+ while(i != 19){
+ load(paste0('G:/.shortcut-targets-by-id/1NzgdfgQW4Evonx1hUol7ETBjDT7Vd1f1/NIETTA/Dimitri/projecao_2023/prec85_'
+ ,i,'.RData'))
+ if(i == 18){rcp85 <- rcp85[1:4280]}
+ matriz <- lapply(rcp85, function(x){
+                           r <-  raster(x, xmn=-57, xmx=-46.05, ymn=-32, ymx=-23.45, 
+                                 crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
+                      r <-         flip(r, direction = 'y')
+                      r <- crop(r, recorte)
+                      values(r)
+                         }) 
+ sequencia85 <- append(sequencia85, matriz)
+
   gc(reset = T)
- sequencia <- sequencia + 5000
- seq_data <- seq_data + 625
+
  print(i)
  i <- i+1
  
- } 
+ }
+
+  prec85 <- lapply(1:11160, function(x){dia <- sequencia85[1:8 + (x-1)*8]
+                             lapply(1:8, function(x){dia[[x]]}) %>% #3 == prec
+            Reduce('+',.)*1000}) 
  
- 
+  names(prec85) <- datas[-length(datas)] 
  
  
