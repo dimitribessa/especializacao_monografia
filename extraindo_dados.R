@@ -57,7 +57,7 @@
  
  #retirando os repetiudos
  files_hist <- files_hist[(1:length(files_hist))%%2 == 1]
- files_hist <- files_hist[-length(files_hist)]   
+ files_hist <- files_hist[-length(files_hist)]
  
  files_proj45 <- files_proj45[(1:length(files_proj45))%%2 == 1]
  files_proj45 <- files_proj45[-1]
