@@ -107,7 +107,8 @@
                                  crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
                       r <-         flip(r, direction = 'y')
                       r <- crop(r, recorte)
-                      values(r)
+                      #values(r)
+                      r
                          }) 
  sequencia45 <- append(sequencia45, matriz)
 
@@ -119,12 +120,16 @@
  }
 
   prec45 <- lapply(1:11160, function(x){dia <- sequencia45[1:8 + (x-1)*8]
-                             lapply(1:8, function(x){dia[[x]]}) %>% #3 == prec
+                             lapply(1:8, function(x){values(dia[[x]])}) %>% #3 == prec
             Reduce('+',.)*1000}) 
  
   names(prec45) <- datas[-length(datas)]
- 
 
+ #tratando os dados, utilizando apenas o maior valor diário do raster
+ prec45 <- lapply(prec45, max)
+ prec45 <- data.frame(data = names(prec45), prec45 = unlist(prec45))
+ prec45[,1] <- as.Date(prec45[,1], format = '%Y%m%d')
+ prec45 <- prec45[!is.na(prec45[,1]),]
 #----------------------------------------------------------------------------#
  #-------------precipitação cenário 85----------------------------------#
  i <- 1
@@ -138,7 +143,8 @@
                                  crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
                       r <-         flip(r, direction = 'y')
                       r <- crop(r, recorte)
-                      values(r)
+                      #values(r)
+                      r
                          }) 
  sequencia85 <- append(sequencia85, matriz)
 
@@ -150,9 +156,14 @@
  }
 
   prec85 <- lapply(1:11160, function(x){dia <- sequencia85[1:8 + (x-1)*8]
-                             lapply(1:8, function(x){dia[[x]]}) %>% #3 == prec
+                             lapply(1:8, function(x){values(dia[[x]])}) %>% #3 == prec
             Reduce('+',.)*1000}) 
  
   names(prec85) <- datas[-length(datas)] 
  
+ #tratando os dados, utilizando apenas o maior valor diário do raster
+ prec85 <- lapply(prec85, max)
+ prec85 <- data.frame(data = names(prec85), prec85 = unlist(prec85))
+ prec85[,1] <- as.Date(prec85[,1], format = '%Y%m%d')
+ prec85 <- prec85[!is.na(prec85[,1]),]
  
