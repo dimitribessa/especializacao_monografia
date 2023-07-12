@@ -175,8 +175,8 @@
  while(i != 22){
  load(paste0('G:/.shortcut-targets-by-id/1NzgdfgQW4Evonx1hUol7ETBjDT7Vd1f1/NIETTA/Dimitri/projecao/rcp1975_2010_',
       i,'.RData'))
- if(i == 21){prechist <- rcp1975_2010[[3]]}else{
-             prechist <- rcp1975_2010[[3]]
+ if(i == 21){prechist <- rcp1975_2010[1:3680]}else{
+             prechist <- rcp1975_2010
  }
  matriz <- lapply(prechist, function(x){
                            x <- x[[3]]
