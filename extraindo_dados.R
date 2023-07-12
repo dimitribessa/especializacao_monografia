@@ -68,7 +68,7 @@
  #nomeando a lista...
  nomes <- substr(files_proj85,30,37)  #formato %aaaammdd (sem as horas)
  nomes1975 <- substr(files_hist,30,37)
- datas <- unique(as.Date(nomes, '%Y%m%d%H'))
+ #datas <- unique(as.Date(nomes, '%Y%m%d%H'))
  datas <- unique(nomes)
  datas1975 <- unique(nomes1975)
 
@@ -130,7 +130,7 @@
  prec45 <- data.frame(data = names(prec45), prec45 = unlist(prec45))
  prec45[,1] <- as.Date(prec45[,1], format = '%Y%m%d')
  prec45 <- prec45[!is.na(prec45[,1]),]
-#----------------------------------------------------------------------------#
+ #----------------------------------------------------------------------------#
  #-------------precipitação cenário 85----------------------------------#
  i <- 1
  sequencia85 <- NULL
@@ -166,4 +166,45 @@
  prec85 <- data.frame(data = names(prec85), prec85 = unlist(prec85))
  prec85[,1] <- as.Date(prec85[,1], format = '%Y%m%d')
  prec85 <- prec85[!is.na(prec85[,1]),]
+ 
+
+ #----------------------------------------------------------------------------#
+ #-------------precipitação cenário histórico---------------------------------#
+ i <- 1
+ sequenciahist <- NULL
+ while(i != 22){
+ load(paste0('G:/.shortcut-targets-by-id/1NzgdfgQW4Evonx1hUol7ETBjDT7Vd1f1/NIETTA/Dimitri/projecao/rcp1975_2010_',
+      i,'.RData'))
+ if(i == 21){prechist <- rcp1975_2010[[3]]}else{
+             prechist <- rcp1975_2010[[3]]
+ }
+ matriz <- lapply(prechist, function(x){
+                           x <- x[[3]]
+                           r <-  raster(x, xmn=-57, xmx=-46.05, ymn=-32, ymx=-23.45, 
+                                 crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
+                      r <-         flip(r, direction = 'y')
+                      r <- crop(r, recorte)
+                      #values(r)
+                      r
+                         }) 
+ sequenciahist <- append(sequenciahist, matriz)
+
+  gc(reset = T)
+
+ print(i)
+ i <- i+1
+ 
+ }
+
+  prechist <- lapply(1:12960, function(x){dia <- sequenciahist[1:8 + (x-1)*8]
+                             lapply(1:8, function(x){values(dia[[x]])}) %>% #3 == prec
+            Reduce('+',.)*1000}) 
+ 
+  names(prechist) <- datas1975[-length(datas1975)] 
+ 
+ #tratando os dados, utilizando apenas o maior valor diário do raster
+ prechist <- lapply(prechist, max)
+ prechist <- data.frame(data = names(prechist), prechist = unlist(prechist))
+ prechist[,1] <- as.Date(prechist[,1], format = '%Y%m%d')
+ prechist <- prechist[!is.na(prechist[,1]),]
  
