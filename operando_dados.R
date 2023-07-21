@@ -8,6 +8,7 @@
  library('dplyr')        #manipulação de dados - tydiverse
  library('stringr')      #funções de string  - tydiverse
  library('magrittr')     #para mudar nome de colunas
+ library('xtable')       #exportar df para tex
  
  library('extRemes') #cálculo de valores extremos
   #funçoes espaciais
@@ -62,6 +63,28 @@
  blockmaxhist <- aggregate(prechist ~ano, data =  prechist[prechist$ano > 1979,], FUN = max)
  blockmaxhist$t <- 1:nrow(blockmaxhist)
 
+ #-------------------------------------------------------------------------
+ #estatística descritiva
+
+ est_desc <- function(x){
+                round(data.frame('Média'= mean(x[,2]), 'Mediana' = median(x[,2]), 
+                'Desvio Padrão' = sd(x[,2]), 'CV' = sd(x[,2])/mean(x[,2])),2)
+ }
+
+ tab_desc <- purrr::map_df(list(blockmaxhist, blockmax45, blockmax85,
+                            prechistmes ,prec45mes, prec85mes), est_desc )
+
+ #grpaficos
+
+ df_mes <- purrr::map_df(list(unname(blockmaxhist[,1:2]), 
+                unname(blockmax45[,1:2]), unname(blockmax85[,1:2])),
+                function(x){names(x) <- c('ano', 'prec')
+                x}) 
+ df_mes$cenario <- c(rep('Baseline',31), rep('RCP 4.5',31), rep('RCP 8.5',31))
+
+ theme_set(theme_minimal())
+ ggplot(df_mes, aes(x = ano, y = prec)) + 
+ geom_line(aes(colour = cenario), size = 1.25)
  # maximum likelihood estimation
  # blockmaxima
  mle_45 <- fevd(x = prec45, data = blockmax45, location.fun=~t, method = "MLE", type="GEV", time.units = 'years')
@@ -72,8 +95,8 @@
             time.units = 'months', span = 31)
  mle_85p <- fevd(x = prec85, data = prec85mes, scale.fun=~t,  type="GP", threshold = 130, use.phi = F,
             time.units = 'months', span = 31)
-  
- 
+ mle_histp <- fevd(x = prechist, data = prechistmes, scale.fun=~t,  type="GP", threshold = 130, use.phi = F,
+            time.units = 'months', span = 31)
  
  rl_trendp<- return.level(mle_45p, conf = 0.05, return.period= c(5,10,20,100))
 
@@ -83,6 +106,8 @@
 
  #valores do período de retorno
  erlevd(mle_85,10)
-
+ 
+ 
  #valores dos parâmetros do modelo
  strip(mle_45)
+ ci(mle_45p, type =  'parameter')
