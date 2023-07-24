@@ -107,6 +107,7 @@
                                  crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
                       r <-         flip(r, direction = 'y')
                       r <- crop(r, recorte)
+                      r <- mask(r, recorte)
                       #values(r)
                       r
                          }) 
@@ -143,6 +144,7 @@
                                  crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
                       r <-         flip(r, direction = 'y')
                       r <- crop(r, recorte)
+                      r <- mask(r, recorte)
                       #values(r)
                       r
                          }) 
@@ -184,9 +186,9 @@
                            x <- x[[3]]
                            r <-  raster(x, xmn=-57, xmx=-46.05, ymn=-32, ymx=-23.45, 
                                  crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0")) 
-                      r <-         flip(r, direction = 'y')
+                      r <- flip(r, direction = 'y')
                       r <- crop(r, recorte)
-                      #values(r)
+                      r <- mask(r, recorte)
                       r
                          }) 
  sequenciahist <- append(sequenciahist, matriz)
