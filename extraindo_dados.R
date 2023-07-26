@@ -127,7 +127,7 @@
   names(prec45) <- datas[-length(datas)]
 
  #tratando os dados, utilizando apenas o maior valor diário do raster
- prec45 <- lapply(prec45, max)
+ prec45 <- lapply(prec45, max, na.rm = T)
  prec45 <- data.frame(data = names(prec45), prec45 = unlist(prec45))
  prec45[,1] <- as.Date(prec45[,1], format = '%Y%m%d')
  prec45 <- prec45[!is.na(prec45[,1]),]
@@ -164,7 +164,7 @@
   names(prec85) <- datas[-length(datas)] 
  
  #tratando os dados, utilizando apenas o maior valor diário do raster
- prec85 <- lapply(prec85, max)
+ prec85 <- lapply(prec85, max, na.rm = T)
  prec85 <- data.frame(data = names(prec85), prec85 = unlist(prec85))
  prec85[,1] <- as.Date(prec85[,1], format = '%Y%m%d')
  prec85 <- prec85[!is.na(prec85[,1]),]
@@ -207,7 +207,7 @@
   names(prechist) <- datas1975[-length(datas1975)] 
  
  #tratando os dados, utilizando apenas o maior valor diário do raster
- prechist <- lapply(prechist, max)
+ prechist <- lapply(prechist, max, na.rm = T)
  prechist <- data.frame(data = names(prechist), prechist = unlist(prechist))
  prechist[,1] <- as.Date(prechist[,1], format = '%Y%m%d')
  prechist <- prechist[!is.na(prechist[,1]),]
