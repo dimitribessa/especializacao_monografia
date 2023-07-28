@@ -19,6 +19,7 @@
  library('leaflet')
  library('sp')
  library('sf')
+ library('ggspatial') #pacote para itens de mapas no ggplot
 
  #Block Maxima
  #obtendo os valores máximos mensais
@@ -50,7 +51,7 @@
  blockmax85 <- aggregate(prec85 ~ano, data = prec85, FUN = max)
  blockmax85$t <- 1:nrow(blockmax85) 
 
- #rcp45
+ #baseline
  prechist$ano_mes <- substr(prechist[,1],1,7)
  prechist$ano <- substr(prechist[,1],1,4) %>% as.numeric(.)
  prechist$mes <- substr(prechist[,1],6,7) %>% as.numeric(.)
@@ -67,7 +68,7 @@
  #estatística descritiva
 
  est_desc <- function(x){
-                round(data.frame('Média'= mean(x[,2]), 'Mediana' = median(x[,2]), 
+                round(data.frame('Média'= mean(x[,2]), 'Mediana' = median(x[,2]), 'Máximo' = max(x[,2]),
                 'Desvio Padrão' = sd(x[,2]), 'CV' = sd(x[,2])/mean(x[,2])),2)
  }
 
