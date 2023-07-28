@@ -124,14 +124,19 @@
  #ggplot(data = rasterdf45, aes(x = layer)) +
  #geom_histogram( binwidth=10, fill="#999e9d", color="#e9ecef", alpha=0.9, 
  #breaks = round(seq(min(rasterdf45$layer), max(rasterdf45$layer),10))) 
-
+ 
+ #abindo e salvando...
+ png('hist_plot.png', height = 200)
  par(mfrow = c(1,3))
  hist_baseline <- hist(raster_histdf[,3], main = 'Baseline', xlab = 'mm/dia', ylab = 'Frequência') 
  hist_45 <- hist(rasterdf45[,3], main = 'RCP 4.5', xlab = 'mm/dia', ylab = 'Frequência') 
  hist_85 <- hist(rasterdf85[,3], main = 'RCP 8.5', xlab = 'mm/dia', ylab = 'Frequência') 
 
- all_hist <- recordPlot() 
+ all_hist <- recordPlot()
  par(mfrow = c(1,1))
 
  #gridExtra::grid.arrange(gridExtra::arrangeGrob(all_maps, all_hist), nrow = 2)
+ png('mapas_raster.png', height = 350)
+ all_maps
+ dev.off()
 
