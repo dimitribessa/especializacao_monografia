@@ -68,14 +68,17 @@
  #estatística descritiva
 
  est_desc <- function(x){
-                round(data.frame('Média'= mean(x[,2]), 'Mediana' = median(x[,2]), 'Máximo' = max(x[,2]),
+                round(data.frame('Mínimo' = min(x[,2]),'Média'= mean(x[,2]), 'Mediana' = median(x[,2]), 'Máximo' = max(x[,2]),
                 'Desvio Padrão' = sd(x[,2]), 'CV' = sd(x[,2])/mean(x[,2])),2)
  }
 
  tab_desc <- purrr::map_df(list(blockmaxhist, blockmax45, blockmax85,
                             prechistmes ,prec45mes, prec85mes), est_desc )
 
- #grpaficos
+ #xtable(tab_desc, caption = 'Estatísticas descritivas 
+ #das séries de precipitações máximas anuais e mensais, no \textit{baseline} e nas cenários RCP 4.5 e 8.5')
+  
+  #grpaficos (sem uso)
 
  df_mes <- purrr::map_df(list(unname(blockmaxhist[,1:2]), 
                 unname(blockmax45[,1:2]), unname(blockmax85[,1:2])),
@@ -86,7 +89,11 @@
  theme_set(theme_minimal())
  ggplot(df_mes, aes(x = ano, y = prec)) + 
  geom_line(aes(colour = cenario), size = 1.25)
- # maximum likelihood estimation
+
+  #plotando os mapas
+  source('script_mapas_hists.r')
+
+ # rodando os modelos
  # blockmaxima
  mle_45 <- fevd(x = prec45, data = blockmax45, location.fun=~t, method = "MLE", type="GEV", time.units = 'years')
  mle_85 <- fevd(x = prec85, data = blockmax85, location.fun=~t, method = "MLE", type="GEV", time.units = 'years')
@@ -98,7 +105,20 @@
             time.units = 'months', span = 31)
  mle_histp <- fevd(x = prechist, data = prechistmes, scale.fun=~t,  type="GP", threshold = 130, use.phi = F,
             time.units = 'months', span = 31)
- 
+
+ #tabela com os parâmetros e erro padrão
+ params_gve <- lapply(list(mle_hist, mle_45, mle_85),  function(x){
+                matrix(c(strip(x), summary(x, silent = T)$se), 2,4, byrow = T) }) %>% 
+                do.call('rbind', .)
+
+ params_gp <- lapply(list(mle_histp, mle_45p, mle_85p),  function(x){
+                matrix(c(strip(x), summary(x, silent = T)$se), 2,3, byrow = T) }) %>% 
+                do.call('rbind', .)
+
+
+ #rodando script para os gráficos de distribuição
+ source('script_dist_graf.R')
+
  rl_trendp<- return.level(mle_45p, conf = 0.05, return.period= c(5,10,20,100))
 
 
