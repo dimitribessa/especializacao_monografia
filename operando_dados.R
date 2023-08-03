@@ -102,7 +102,7 @@
  mle_45p <- fevd(x = prec45, data = prec45mes, scale.fun=~t,  type="GP", threshold = 130, use.phi = F,
             time.units = 'months', span = 31)
  mle_85p <- fevd(x = prec85, data = prec85mes, scale.fun=~t,  type="GP", threshold = 130, use.phi = F,
-            time.units = 'months', span = 31)
+            time.units = 'months', span = 31, method = 'GMLE')
  mle_histp <- fevd(x = prechist, data = prechistmes, scale.fun=~t,  type="GP", threshold = 130, use.phi = F,
             time.units = 'months', span = 31)
 
@@ -118,6 +118,29 @@
 
  #rodando script para os gráficos de distribuição
  source('script_dist_graf.R')
+
+ #return levels
+
+ #tabela período retorno
+ func_rlevd <- function(x, y = "GEV"){
+            params <- strip(x)
+            if(y == 'GEV'){
+            rlevd(c(5,10,25,100),
+            params[1], params[3],params[4], type = y )}else{
+            rlevd(c(5,10,25,100),
+             scale = params[1], shape = params[3], type = y, threshold = 130 )
+            }
+
+}
+
+
+ tab_rlevelgev <- lapply(list(mle_hist, mle_45, mle_85), function(x, y = 'GEV'){round(func_rlevd(x,y),2)}) %>%
+                    do.call('rbind', .)
+
+ tab_rlevelgp <- lapply(list(mle_histp, mle_45p, mle_85p), function(x, y = 'GP'){round(func_rlevd(x,y),2)}) %>%
+                    do.call('rbind', .)
+
+
 
  rl_trendp<- return.level(mle_45p, conf = 0.05, return.period= c(5,10,20,100))
 

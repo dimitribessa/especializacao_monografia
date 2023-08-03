@@ -9,8 +9,8 @@ func_devd <- function(x){
 
 func_gpd <- function(x){
             params <- strip(x)
-           devd(seq(10, 60,,100),
-           scale = params[1],shape = params[3] , threshold = 130,type = 'GP')
+           devd(seq(131, 200,,100),
+           loc = 130, scale = params[1],shape = params[3] , threshold = 130,type = 'GP')
 }
 
 dados_devd <- purrr::map_df(list(mle_hist, mle_45, mle_85), function(x){
@@ -23,7 +23,7 @@ dados_devd$cenario <- rep(c('Baseline', 'RCP 4.5', 'RCP 8.5'), times = 1, each =
 
 dados_gpd <- purrr::map_df(list(mle_histp, mle_45p, mle_85p), function(x){
               densidade <- func_gpd(x)
-              data.frame(prec = seq(10,60,,100), densidade)      
+              data.frame(prec = seq(131,200,,100), densidade)      
 
 })
 
@@ -50,9 +50,12 @@ graf_gpd <-
 ggplot(dados_gpd, aes(x = prec, y = densidade)) +
 geom_line(aes(colour = cenario)) + 
 theme(legend.position =  'hidden') + 
-labs(colour = 'Cenários', y = 'Densidade', x = 'mm/dia', title = 'GP' )
+labs(colour = 'Cenários', y = 'Densidade', x = 'mm/dia', title = 'GP' ) +
+ylim(0,0.075)
 
 graf_combined <- gridExtra::grid.arrange(graf_gdev + theme(legend.position = 'hidden'),
                         graf_gpd, ncol = 2)
 
-gridExtra::grid.arrange(graf_combined, legenda, nrow = 2, heights = c(10,1))
+ png('graf_dist.png', height = 300)
+ gridExtra::grid.arrange(graf_combined, legenda, nrow = 2, heights = c(10,1))
+ dev.off()
