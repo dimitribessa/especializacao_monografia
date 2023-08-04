@@ -128,7 +128,7 @@
             rlevd(c(5,10,25,100),
             params[1], params[3],params[4], type = y )}else{
             rlevd(c(5,10,25,100),
-             scale = params[1], shape = params[3], type = y, threshold = 130 )
+             scale = params[1], shape = params[3], type = y, threshold = 130)
             }
 
 }
@@ -140,18 +140,7 @@
  tab_rlevelgp <- lapply(list(mle_histp, mle_45p, mle_85p), function(x, y = 'GP'){round(func_rlevd(x,y),2)}) %>%
                     do.call('rbind', .)
 
+ #gráficos período de retorno
+ source('script_grafrl.R')
 
 
- rl_trendp<- return.level(mle_45p, conf = 0.05, return.period= c(5,10,20,100))
-
-
- # return level plot
- plot(mle_45, type="rl", main="Return Level Plot for Bärnkopf w/ MLE")
-
- #valores do período de retorno
- erlevd(mle_85,10)
- 
- 
- #valores dos parâmetros do modelo
- strip(mle_45)
- ci(mle_45p, type =  'parameter')
