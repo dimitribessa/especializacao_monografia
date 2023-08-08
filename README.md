@@ -1,0 +1,2 @@
+# Especialização
+Neste reposítório seguem os códigos usados para tratar e gerar os dados oriundos do modelo Eta Hadgem ES2 5x5km, usados na monografia de conclusão de curso da especialização em Estatística com ênfase em pesquisa quantitativa da Universidade Estadual de Londrina (UEL) - 2023
