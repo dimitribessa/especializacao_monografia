@@ -91,8 +91,9 @@
  geom_line(aes(colour = cenario), size = 1.25)
 
   #plotando os mapas
-  source('script_mapas_hists.r')
-
+  #falta subir os dados raster necessáriuos para o script
+  #source('script_mapas_hists.r')
+  
  # rodando os modelos
  # blockmaxima
  mle_45 <- fevd(x = prec45, data = blockmax45, location.fun=~t, method = "MLE", type="GEV", time.units = 'years')
