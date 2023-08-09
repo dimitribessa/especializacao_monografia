@@ -21,6 +21,8 @@
  library('sf')
  library('ggspatial') #pacote para itens de mapas no ggplot
 
+ load('dado.RData')
+
  #Block Maxima
  #obtendo os valores máximos mensais
  
