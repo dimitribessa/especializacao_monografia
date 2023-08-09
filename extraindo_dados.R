@@ -33,27 +33,7 @@
 
 
  #obtendo nome dos arquivos do eta
- session <- ssh::ssh_connect('sdc_nietta@10.111.7.174', passwd = 'N1et4-SDc.d@2020')
  
- files_hist <- ssh::ssh_exec_internal(session, "ls ./Rodada_Eta_HadGEM2-ES_5km/1975_2010/2D") %>%
-    .[["stdout"]]  %>%
-    rawToChar()    %>%
-    strsplit("\n") %>%
-    unlist()
-    
- files_proj85 <- ssh::ssh_exec_internal(session, "ls ./Rodada_Eta_HadGEM2-ES_5km/RCP8.5/2D") %>%
-    .[["stdout"]]  %>%
-    rawToChar()    %>%
-    strsplit("\n") %>%
-    unlist()
- 
- files_proj45 <- ssh::ssh_exec_internal(session, "ls ./Rodada_Eta_HadGEM2-ES_5km/RCP4.5/2D") %>%
-    .[["stdout"]]  %>%
-    rawToChar()    %>%
-    strsplit("\n") %>%
-    unlist()
-    
- ssh::ssh_disconnect(session)
  
  #retirando os repetiudos
  files_hist <- files_hist[(1:length(files_hist))%%2 == 1]
